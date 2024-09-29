@@ -1,7 +1,6 @@
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 /**
  * @description:
@@ -41,43 +40,28 @@ import java.util.Set;
  * 所有字符串仅包含小写英文字母。
  *
  */
+
+/*
+@v7fgg
+执行用时：1208 ms, 在所有 Java 提交中击败了5.07%的用户
+内存消耗：48.2 MB, 在所有 Java 提交中击败了100.00%的用户
+2020年6月30日 19:59
+*/
 class Solution6 {
-    Set<String>[] s = new Set[105];
-
     public List<Integer> peopleIndexes(List<List<String>> favoriteCompanies) {
-        for (int i = 1; i < 105; ++i) {
-            s[i] = new HashSet<String>();
-        }
-        int n = favoriteCompanies.size()-1;
-        List<Integer> ans = new ArrayList<Integer>();
-
-        for (int i = 0; i < n; ++i) {
-            for (String com : favoriteCompanies.get(i)) {
-                s[i].add(com);
-            }
-
-            for (int i = 0; i < n; ++i) {
-                boolean isSub = false;
-                for (int j = 0; j < n; ++j) {
-                    if (i == j) {
-                        continue;
+        List<Integer> ans=new ArrayList<>();
+        for(int i=0;i<favoriteCompanies.size();i++){
+            ans.add(i);
+            for(int j=0;j<favoriteCompanies.size();j++){
+                if(i!=j){
+                    //下边直接用ArrayList用containsAll会超时，前者O(n)后者O(1)
+                    if(new HashSet<>(favoriteCompanies.get(j)).containsAll(new HashSet<>(favoriteCompanies.get(i)))){
+                        ans.remove(ans.size()-1);
+                        break;
                     }
-                    isSub |= check(favoriteCompanies, i, j);
-                }
-                if (isSub) {
-                    ans.add(i);
                 }
             }
-
-            return ans;
         }
-
-        public boolean check(List<List<String>> favoriteCompanies, int x, int y) {
-            for (String com : favoriteCompanies.get(x)) {
-                if (!s[y].contains(com)) {
-                    return false;
-                }
-            }
-            return true;
-        }
+        return ans;
     }
+}
